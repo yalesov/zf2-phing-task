@@ -1,0 +1,21 @@
+{
+    "name": "heartsentwined/phing-task",
+    "description": "phing tasks",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "heartsentwined",
+            "email": "heartsentwined@cogito-lab.com",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Phing\\Task": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.3",
+        "phing/phing": "*"
+    }
+}
