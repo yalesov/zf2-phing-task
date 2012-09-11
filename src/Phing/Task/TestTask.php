@@ -1,4 +1,6 @@
 <?php
+namespace Phing\Task;
+
 require_once '../../../../autoload.php';
 
 class TestTask extends Task {
