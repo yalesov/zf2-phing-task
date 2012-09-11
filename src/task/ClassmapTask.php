@@ -6,9 +6,15 @@ use Zend\File\ClassFileLocator;
 class ClassmapTask extends Task
 {
     protected $dir;
-    protected $output = 'autoload_classmap.php';
+    protected $output;
     protected $failonerror = false;
 
+    /**
+     * directory to search for class files (recursive)
+     *
+     * @param string $dir
+     * @return void
+     */
     public function setDir($dir)
     {
         if (!is_dir($dir)) {
@@ -27,14 +33,15 @@ class ClassmapTask extends Task
     }
 
     /**
-     * output file, saved in $dir
+     * output file
      *
      * @param string $output
      * @return void
      */
     public function setOutput($output)
     {
-        $this->output = $output;
+        touch($output);
+        $this->output = realpath($output);
     }
 
     /**
@@ -68,9 +75,7 @@ class ClassmapTask extends Task
             $this->dir = getcwd();
         }
 
-        $output = realpath($this->dir) . DIRECTORY_SEPARATOR . $this->output;
-
-        $this->log(sprintf('Generating classmap file for %s', realpath($this->dir)));
+        $this->log(sprintf('Generating classmap file for %s', $this->dir));
 
         // We need to add the $this->dir into the relative path that is created in the classmap file.
         $classmapPath = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($this->output)));
@@ -147,8 +152,8 @@ class ClassmapTask extends Task
         $content = preg_replace('(\n\s+([^=]+)=>)e', "'\n    \\1' . str_repeat(' ', " . $maxWidth . " - strlen('\\1')) . '=>'", $content);
 
         // Write the contents to disk
-        file_put_contents($output, $content);
+        file_put_contents($this->output, $content);
 
-        $this->log(sprintf('Wrote classmap file at %s', $output));
+        $this->log(sprintf('Wrote classmap file at %s', $this->output));
     }
 }
