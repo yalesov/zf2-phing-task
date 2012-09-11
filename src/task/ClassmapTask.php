@@ -1,74 +1,40 @@
 <?php
 require_once __DIR__ . '/../../../../autoload.php';
 
-/**
-* Phing task to generate a Zend Framework style autoloader classmap file
-*
-* Usage example in a phing build.xml file:
-*
-* <target name="generate-classmap">
-* <taskdef classname="ClassmapTask" name="classmap" />
-*
-* <!-- generate a classmap for library classes -->
-* <classmap outputFile="${builddir}/library/autoload_classmap.php">
-* <dirset dir="${builddir}/library">
-* <include name="Zend" />
-* <include name="MyLibrary" />
-* </dirset>
-* </classmap>
-*
-* <!-- generate a classmap for the MyApplication module -->
-* <classmap outputFile="${builddir}/module/MyApplication/autoload_classmap.php">
-* <dirset dir="${builddir}/module" includes="MyApplication" />
-* </classmap>
-* </target>
-*
-* This will generate a classmap file named 'library/autoload_classmap.php' in
-* the ${builddir} directory (defined by a property), taking the "Zend" and
-* "MyLibrary" directories under ${builddir}/library into account when searching
-* for classes.
-*
-*/
+use Zend\File\ClassFileLocator;
 
 class ClassmapTask extends Task
 {
-    /**
-     * the source files
-     *
-     * @var array
-     */
-    protected $dirsets = array();
-
-    /**
-     * output filename
-     *
-     * @var string
-     */
-    protected $outputFile = "autoload_classmap.php";
-
-    /**
-     * output directory
-     *
-     * @var mixed
-     */
-    protected $outputDir = null;
-
-    /**
-     * if error occured, whether build should fail
-     *
-     * @var mixed
-     */
+    protected $dir;
+    protected $output = 'autoload_classmap.php';
     protected $failonerror = false;
 
+    public function setDir($dir)
+    {
+        if (!is_dir($dir)) {
+            throw new BuildException(sprintf(
+                'Directory does not exist: %s',
+                realpath($dir)
+            ));
+        }
+        if (!is_writable($dir)) {
+            throw new BuildException(sprintf(
+                'Directory is not writable: %s',
+                realpath($dir)
+            ));
+        }
+        $this->dir = realpath($dir);
+    }
+
     /**
-     * nested creator, add a set of directories
+     * output file, saved in $dir
      *
+     * @param string $output
      * @return void
      */
-    public function createDirSet()
+    public function setOutput($output)
     {
-        $num = array_push($this->dirsets, new DirSet());
-        return $this->dirsets[$num - 1];
+        $this->output = $output;
     }
 
     /**
@@ -83,31 +49,12 @@ class ClassmapTask extends Task
     }
 
     /**
-     * output file
-     *
-     * @param string $outputFile
-     * @return void
-     */
-    public function setOutputFile($outputFile)
-    {
-        $outputDir = realpath(dirname($outputFile));
-        if (! $outputDir) {
-            throw new BuildException("Output directory '$outputDir' does not exist");
-        }
-
-        $this->outputDir = $outputDir;
-        $this->outputFile = basename($outputFile);
-    }
-
-    /**
      * init
      *
      * @return void
      */
     public function init()
     {
-        $loader = new Zend\Loader\StandardAutoloader();
-        $loader->register();
     }
 
     /**
@@ -117,128 +64,91 @@ class ClassmapTask extends Task
      */
     public function main()
     {
-        if (null === $this->outputDir) {
-            $this->outputDir = getcwd();
+        if (!$this->dir) {
+            $this->dir = getcwd();
         }
 
-        foreach ($this->dirsets as $ds) { /* @var $ds DirSet */
-            try {
-                $dirs = $ds->getDirectoryScanner($this->project)->getIncludedDirectories();
-                $fullPath = realpath($ds->getDir($this->project));
-                $map = new stdClass();
-                foreach ($dirs as $dir) {
-                    $dir = $fullPath . "/" . $dir;
-                    $this->log("Processing library dir: $dir");
-                    $locator = new Zend\File\ClassFileLocator($dir);
-                    foreach($locator as $file) {
-                        $this->addFileToMap($file, $map);
-                    }
-                }
+        $output = realpath($this->dir) . DIRECTORY_SEPARATOR . $this->output;
 
-                $this->writeMapFile($map);
+        $this->log(sprintf('Generating classmap file for %s', realpath($this->dir)));
 
-            } catch (BuildException $be) {
-                // directory doesn't exist or is not readable
-                if ($this->failonerror) {
-                    throw $be;
-                } else {
-                    $this->log($be->getMessage(), $this->quiet ? Project::MSG_VERBOSE : Project::MSG_WARN);
+        // We need to add the $this->dir into the relative path that is created in the classmap file.
+        $classmapPath = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($this->output)));
+
+        // Simple case: $libraryPathCompare is in $classmapPathCompare
+        if (strpos($this->dir, $classmapPath) === 0) {
+            $relativePathForClassmap = substr($this->dir, strlen($classmapPath) + 1) . '/';
+        } else {
+            $libraryPathParts  = explode('/', $this->dir);
+            $classmapPathParts = explode('/', $classmapPath);
+
+            // Find the common part
+            $count = count($classmapPathParts);
+            for ($i = 0; $i < $count; $i++) {
+                if (!isset($libraryPathParts[$i]) || $libraryPathParts[$i] != $classmapPathParts[$i]) {
+                    // Common part end
+                    break;
                 }
             }
+
+            // Add parent dirs for the subdirs of classmap
+            $relativePathForClassmap = str_repeat('../', $count - $i);
+
+            // Add library subdirs
+            $count = count($libraryPathParts);
+            for (; $i < $count; $i++) {
+                $relativePathForClassmap .= $libraryPathParts[$i] . '/';
+            }
         }
-    }
 
-    protected function addFileToMap(SplFileInfo $file, stdClass $map)
-    {
-        $filename = $this->getRelativePathFromMapFile($file);
-        if (empty($file->classname)) return;
-        $namespace = empty($file->namespace) ? '' : $file->namespace . '\\';
-        $map->{$namespace . $file->classname} = "/" . ltrim($filename, "/");
-    }
+        // Get the ClassFileLocator, and pass it the library path
+        $locator = new ClassFileLocator($this->dir);
 
-    protected function writeMapFile(stdClass $map)
-    {
-        $maxKeyLength = $this->findLongestKeyLength($map) + 2;
+        // Iterate over each element in the path, and create a map of
+        // classname => filename, where the filename is relative to the library path
+        $map = new stdClass;
+        foreach ($locator as $file) {
+            $filename  = str_replace($this->dir . '/', '', str_replace(DIRECTORY_SEPARATOR, '/', $file->getPath()) . '/' . $file->getFilename());
 
-        $output = "<?php\n\n" .
-                  "/**\n" .
-                  " * Zend Framework autoloader classmap\n" .
-                  " *\n" .
-                  " * Auto-generated by Phing\\" . __CLASS__ . " at " . date(DATE_RFC2822) . "\n" .
-                  " */\n\n" .
-                  "return ";
+            // Add in relative path to library
+            $filename  = $relativePathForClassmap . $filename;
 
-        $classmap = var_export((array) $map, true);
+            foreach ($file->getClasses() as $class) {
+                $map->{$class} = $filename;
+            }
+        }
+
+        // Create a file with the class/file map.
+        // Stupid syntax highlighters make separating < from PHP declaration necessary
+        $content = '<' . "?php\n"
+                 . "// Generated by ZF2's ./bin/classmap_generator.php\n"
+                 . 'return ' . var_export((array) $map, true) . ';';
+
+        // Prefix with __DIR__; modify the generated content
+        $content = preg_replace("#(=> ')#", "=> __DIR__ . '/", $content);
+
+        // Fix \' strings from injected DIRECTORY_SEPARATOR usage in iterator_apply op
+        $content = str_replace("\\'", "'", $content);
 
         // Remove unnecessary double-backslashes
-        $classmap = str_replace('\\\\', '\\', $classmap);
+        $content = str_replace('\\\\', '\\', $content);
 
         // Exchange "array (" width "array("
-        $classmap = str_replace('array (', 'array(', $classmap);
+        $content = str_replace('array (', 'array(', $content);
 
-        $replaceFunc = function ($match) use ($maxKeyLength) {
-            return sprintf(" %-{$maxKeyLength}s => __DIR__ .", $match[1]);
-        };
+        // Align "=>" operators to match coding standard
+        preg_match_all('(\n\s+([^=]+)=>)', $content, $matches, PREG_SET_ORDER);
+        $maxWidth = 0;
 
-        $output .= preg_replace_callback('/^\s+([^=]+)\s+=>/m', $replaceFunc, $classmap) . ';';
-
-        $outputFile = $this->outputDir . '/' . $this->outputFile;
-        if (! @file_put_contents($outputFile, $output)) {
-            throw new BuildException("Unable to write classmap to $outputFile");
+        foreach ($matches as $match) {
+            $maxWidth = max($maxWidth, strlen($match[1]));
         }
 
-        $this->log("Wrote autoloader classmap file to $outputFile");
-    }
+        $content = preg_replace('(\n\s+([^=]+)=>)e', "'\n    \\1' . str_repeat(' ', " . $maxWidth . " - strlen('\\1')) . '=>'", $content);
 
-    /**
-     * Get relative path to a class file from the classmap file path
-     *
-     * @param SplFileInfo $file
-     * @return string
-     */
-    protected function getRelativePathFromMapFile(SplFileInfo $file)
-    {
-        if (strpos($file->getPath(), $this->outputDir) === 0) {
-            $relativePath = substr($file->getPath(), strlen($this->outputDir) + 1) . '/';
-        } else {
-            $relative = array();
-            $filePathParts = explode('/', $file->getPath());
-            $outputDirParts = explode('/', $this->outputDir);
+        // Write the contents to disk
+        file_put_contents($output, $content);
 
-            foreach ($outputDirParts as $index => $part) {
-                if (isset($filePathParts[$index]) && $filePathParts[$index] == $part) {
-                    continue;
-                }
-
-                $relative[] = '..';
-            }
-
-            foreach ($filePathParts as $index => $part ) {
-                if (isset($outputDirParts[$index]) && $outputDirParts[$index] == $part) {
-                    continue;
-                }
-
-                $relative[] = $part;
-            }
-
-            $relativePath = implode('/', $relative) . '/';
-        }
-
-        return $relativePath . $file->getFilename();
-    }
-
-    /**
-     * Get the length of the longest key in an object
-     *
-     * @param stdClass $map
-     * @return int
-     */
-    protected function findLongestKeyLength(stdClass $map)
-    {
-        $max = 0;
-        foreach(array_keys(get_object_vars($map)) as $key) {
-            $max = max($max, strlen($key));
-        }
-        return $max;
+        $this->log(sprintf('Wrote classmap file at %s', $output));
     }
 }
