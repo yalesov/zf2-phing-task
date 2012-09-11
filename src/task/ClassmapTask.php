@@ -151,6 +151,7 @@ class ClassmapTask extends Task
     protected function addFileToMap(SplFileInfo $file, stdClass $map)
     {
         $filename = $this->getRelativePathFromMapFile($file);
+        if (empty($file->classname)) return;
         $namespace = empty($file->namespace) ? '' : $file->namespace . '\\';
         $map->{$namespace . $file->classname} = "/" . ltrim($filename, "/");
     }
