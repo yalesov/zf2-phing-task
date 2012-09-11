@@ -3,7 +3,7 @@ namespace Phing\Task;
 
 require_once __DIR__ . '/../../../../../autoload.php';
 
-class TestTask extends Task {
+class TestTask extends \Task {
 
     /**
      * The message passed in the buildfile.
