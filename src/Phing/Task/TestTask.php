@@ -1,7 +1,7 @@
 <?php
 namespace Phing\Task;
 
-require_once __DIR__ . '../../../autoload.php';
+require_once __DIR__ . '/../../../../../autoload.php';
 
 class TestTask extends Task {
 
