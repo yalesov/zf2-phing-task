@@ -10,9 +10,7 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "Phing\\Task": "src/"
-        }
+        "classmap": ["src/task/"]
     },
     "require": {
         "php": ">=5.3.3",
