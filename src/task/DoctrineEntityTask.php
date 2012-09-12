@@ -79,7 +79,7 @@ class DoctrineEntityTask extends Task
             chdir($dir);
         }
 
-        $application = Application::init(Yaml::parse('config/application.config.yml'));
+        $application = Application::init(Yaml::parse('config/application.config.yml'))->run();
         $this->setEm(
             $application->getServiceManager()->get('doctrine.entitymanager.orm_default'));
 
