@@ -65,6 +65,15 @@ class DoctrineEntityTask extends Task
      */
     public function init()
     {
+    }
+
+    /**
+     * main method
+     *
+     * @return void
+     */
+    public function main()
+    {
         $wd = getcwd();
 
         $previousDir = '.';
@@ -79,20 +88,14 @@ class DoctrineEntityTask extends Task
             chdir($dir);
         }
 
-        $application = Application::init(Yaml::parse('config/application.config.yml'))->run();
+        $application = Application::init(Yaml::parse('config/application.config.yml'));
         $this->setEm(
             $application->getServiceManager()->get('doctrine.entitymanager.orm_default'));
 
         chdir($wd);
-    }
 
-    /**
-     * main method
-     *
-     * @return void
-     */
-    public function main()
-    {
+        /* finish bootstrapping zf2 */
+
         $cmf = new DisconnectedClassMetadataFactory();
         $cmf->setEntityManager($this->em);
         $metadatas = $cmf->getAllMetadata();
