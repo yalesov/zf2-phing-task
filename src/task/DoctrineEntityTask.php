@@ -8,7 +8,7 @@ use Symfony\Component\Yaml\Yaml;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Application;
 
-class ClassmapTask extends Task
+class DoctrineEntityTask extends Task
 {
     protected $em;
     protected $failonerror;
