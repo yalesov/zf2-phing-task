@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../../../../autoload.php';
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Symfony\Component\Yaml\Yaml;
@@ -10,19 +9,7 @@ use Zend\Mvc\Application;
 
 class DoctrineEntityTask extends Task
 {
-    protected $em;
     protected $failonerror;
-
-    /**
-     * EntityManager
-     *
-     * @param EntityManager $em
-     * @return void
-     */
-    public function setEm(EntityManager $em)
-    {
-        $this->em = $em;
-    }
 
     /**
      * output directory for entity classes
@@ -74,30 +61,33 @@ class DoctrineEntityTask extends Task
      */
     public function main()
     {
-        $wd = getcwd();
+        static $em;
 
-        $previousDir = '.';
-        while (!file_exists('config/application.config.yml')) {
-            $dir = dirname(getcwd());
+        if ($em === null) {
+            $wd = getcwd();
 
-            if ($previousDir === $dir) {
-                throw new BuildException('Unable to locate "config/application.config.yml"');
+            $previousDir = '.';
+            while (!file_exists('config/application.config.yml')) {
+                $dir = dirname(getcwd());
+
+                if ($previousDir === $dir) {
+                    throw new BuildException('Unable to locate "config/application.config.yml"');
+                }
+
+                $previousDir = $dir;
+                chdir($dir);
             }
 
-            $previousDir = $dir;
-            chdir($dir);
+            $application = Application::init(Yaml::parse('config/application.config.yml'));
+            $em = $application->getServiceManager()->get('doctrine.entitymanager.orm_default');
+
+            chdir($wd);
+
+            /* finish bootstrapping zf2 */
         }
 
-        $application = Application::init(Yaml::parse('config/application.config.yml'));
-        $this->setEm(
-            $application->getServiceManager()->get('doctrine.entitymanager.orm_default'));
-
-        chdir($wd);
-
-        /* finish bootstrapping zf2 */
-
         $cmf = new DisconnectedClassMetadataFactory();
-        $cmf->setEntityManager($this->em);
+        $cmf->setEntityManager($em);
         $metadatas = $cmf->getAllMetadata();
 
         if (count($metadatas)) {
