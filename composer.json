@@ -14,6 +14,9 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "phing/phing": "*"
+        "phing/phing": "*",
+        "symfony/yaml": "2.0.*",
+        "zendframework/zendframework": "2.*",
+        "heartsentwined/zf2-doctrine": "1.*"
     }
 }
