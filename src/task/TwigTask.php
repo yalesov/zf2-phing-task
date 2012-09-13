@@ -33,6 +33,8 @@ class TwigTask extends Task
             ));
         }
          */
+        $this->baseDir = $baseDir;
+        return;
         $this->baseDir = realpath($baseDir);
     }
 
