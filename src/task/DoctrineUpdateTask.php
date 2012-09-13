@@ -11,29 +11,6 @@ class DoctrineUpdateTask extends Task
     protected $failonerror;
 
     /**
-     * output directory for entity classes
-     *
-     * @param string $output
-     * @return void
-     */
-    public function setOutput($output)
-    {
-        if (!is_dir($output)) {
-            throw new BuildException(sprintf(
-                'Output directory does not exist: %s',
-                realpath($output)
-            ));
-        }
-        if (!is_writable($output)) {
-            throw new BuildException(sprintf(
-                'Output directory is not writable: %s',
-                realpath($output)
-            ));
-        }
-        $this->output = realpath($output);
-    }
-
-    /**
      * if error occured, whether build should fail
      *
      * @param bool $value
