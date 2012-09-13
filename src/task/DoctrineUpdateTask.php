@@ -1,12 +1,12 @@
 <?php
 require_once __DIR__ . '/../../../../autoload.php';
 
-use Doctrine\ORM\Tools\EntityRepositoryGenerator;
+use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Component\Yaml\Yaml;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Application;
 
-class DoctrineRepoTask extends Task
+class DoctrineUpdateTask extends Task
 {
     protected $failonerror;
 
@@ -87,23 +87,16 @@ class DoctrineRepoTask extends Task
 
         $metadatas = $em->getMetadataFactory()->getAllMetadata();
 
-        if (count($metadatas)) {
-            $numRepositories = 0;
-            $generator = new EntityRepositoryGenerator();
+        if (!empty($metadatas)) {
+            $tool = new SchemaTool($em);
+            $sqls = $tool->getUpdateSchemaSql($metadatas, false);
 
-            foreach ($metadatas as $metadata) {
-                if ($metadata->customRepositoryClassName) {
-                    $this->log(sprintf('Processing entity %s', $metadata->name));
-                    $generator->writeEntityRepositoryClass($metadata->customRepositoryClassName, $this->output);
-                    $numRepositories++;
-                }
-            }
-
-            if ($numRepositories) {
-                // Outputting information message
-                $this->log(sprintf('Repository classes generated to %s', $this->output));
+            if (0 === count($sqls)) {
+                $this->log('Nothing to update - your database is already in sync with the current entity metadata.');
             } else {
-                $this->log('No repository classes were found to be processed');
+                $this->log('Updating database schema...');
+                $tool->updateSchema($metadatas, false);
+                $this->log(sprintf('Database schema updated successfully! %s queries were executed', count($sqls)));
             }
         } else {
             $this->log('No metadata classes to process');
