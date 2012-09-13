@@ -1,38 +1,48 @@
 <?php
 require_once __DIR__ . '/../../../../autoload.php';
 
-use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
-use Doctrine\ORM\Tools\EntityGenerator;
 use Symfony\Component\Yaml\Yaml;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Application;
 
 class DoctrineEntityTask extends Task
 {
-    protected $output;
+    protected $baseDir;
+    protected $file;
     protected $failonerror;
 
     /**
-     * output directory for entity classes
+     * base directory for file
      *
-     * @param string $output
+     * @param string $baseDir
      * @return void
      */
-    public function setOutput($output)
+    public function setBaseDir($baseDir)
     {
-        if (!is_dir($output)) {
+        if (!is_dir($baseDir)) {
             throw new BuildException(sprintf(
-                'Output directory does not exist: %s',
-                realpath($output)
+                'baseDir directory does not exist: %s',
+                realpath($baseDir)
             ));
         }
-        if (!is_writable($output)) {
+        if (!is_writable($baseDir)) {
             throw new BuildException(sprintf(
-                'Output directory is not writable: %s',
-                realpath($output)
+                'baseDir directory is not writable: %s',
+                realpath($baseDir)
             ));
         }
-        $this->output = realpath($output);
+        $this->baseDir = realpath($baseDir);
+    }
+
+    /**
+     * path to template file
+     *
+     * @param string $file
+     * @return void
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
     }
 
     /**
@@ -62,9 +72,9 @@ class DoctrineEntityTask extends Task
      */
     public function main()
     {
-        static $em;
+        static $sm;
 
-        if ($em === null) {
+        if ($sm === null) {
             $wd = getcwd();
 
             $previousDir = '.';
@@ -80,12 +90,19 @@ class DoctrineEntityTask extends Task
             }
 
             $application = Application::init(Yaml::parse('config/application.config.yml'));
-            $em = $application->getServiceManager()->get('doctrine.entitymanager.orm_default');
+            $sm = $application->getServiceManager();
 
             chdir($wd);
 
             /* finish bootstrapping zf2 */
         }
+
+        $assetic = $sm->get('assetwig-assetic');
+        $environment = $sm->get('assetwig-environment');
+
+        $this->log('DIR IS ' . $this->baseDir);
+        $this->log('FILE IS ' . $this->file);
+        return ;
 
         $cmf = new DisconnectedClassMetadataFactory();
         $cmf->setEntityManager($em);

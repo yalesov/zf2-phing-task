@@ -7,6 +7,7 @@ use Zend\Mvc\Application;
 
 class DoctrineProxyTask extends Task
 {
+    protected $output;
     protected $failonerror;
 
     /**

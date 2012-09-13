@@ -8,6 +8,7 @@ use Zend\Mvc\Application;
 
 class DoctrineRepoTask extends Task
 {
+    protected $output;
     protected $failonerror;
 
     /**
