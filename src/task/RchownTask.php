@@ -58,7 +58,7 @@ class RchownTask extends Task
      */
     public function main()
     {
-        if (!$this->file) throw new BuildException('dir must be set');
+        if (!$this->file) throw new BuildException('file must be set');
         if (!$this->user) throw new BuildException('user must be set');
 
         if (strpos($this->user, '.')) {
