@@ -7,39 +7,11 @@ use Zend\Mvc\Application;
 
 class TwigTask extends Task
 {
-    protected $baseDir;
     protected $file;
     protected $failonerror;
 
     /**
-     * base directory for file
-     *
-     * @param string $baseDir
-     * @return void
-     */
-    public function setBaseDir($baseDir)
-    {
-        /*
-        if (!is_dir($baseDir)) {
-            throw new BuildException(sprintf(
-                'baseDir directory does not exist: %s',
-                realpath($baseDir)
-            ));
-        }
-        if (!is_writable($baseDir)) {
-            throw new BuildException(sprintf(
-                'baseDir directory is not writable: %s',
-                realpath($baseDir)
-            ));
-        }
-         */
-        $this->baseDir = $baseDir;
-        return;
-        $this->baseDir = realpath($baseDir);
-    }
-
-    /**
-     * path to template file
+     * path to template file, relative to template base directory
      *
      * @param string $file
      * @return void
@@ -76,9 +48,10 @@ class TwigTask extends Task
      */
     public function main()
     {
-        static $sm;
+        static $assetic;
+        static $environment;
 
-        if ($sm === null) {
+        if ($assetic === null || $environment === null) {
             $wd = getcwd();
 
             $previousDir = '.';
@@ -95,44 +68,19 @@ class TwigTask extends Task
 
             $application = Application::init(Yaml::parse('config/application.config.yml'));
             $sm = $application->getServiceManager();
+            $assetic     = $sm->get('assetwig-assetic');
+            $environment = $sm->get('assetwig-environment');
 
             chdir($wd);
 
             /* finish bootstrapping zf2 */
         }
 
-        $assetic = $sm->get('assetwig-assetic');
-        $environment = $sm->get('assetwig-environment');
+        $path = pathinfo($this->file);
+        $template = "{$path['dirname']}/{$path['filename']}";
 
-        $this->log('DIR IS ' . $this->baseDir);
-        $this->log('FILE IS ' . $this->file);
-        return ;
-
-        $cmf = new DisconnectedClassMetadataFactory();
-        $cmf->setEntityManager($em);
-        $metadatas = $cmf->getAllMetadata();
-
-        if (count($metadatas)) {
-            // Create EntityGenerator
-            $entityGenerator = new EntityGenerator();
-
-            $entityGenerator->setGenerateAnnotations(false);
-            $entityGenerator->setGenerateStubMethods(true);
-            $entityGenerator->setRegenerateEntityIfExists(true);
-            $entityGenerator->setUpdateEntityIfExists(true);
-            $entityGenerator->setNumSpaces(4);
-
-            foreach ($metadatas as $metadata) {
-                $this->log(sprintf('Processing entity %s', $metadata->name));
-            }
-
-            // Generating Entities
-            $entityGenerator->generate($metadatas, $this->output);
-
-            // Outputting information message
-            $this->log(sprintf('Entity classes generated to %s', $this->output));
-        } else {
-            $this->log('No metadata classes to process');
-        }
+        $this->log(sprintf('Loading %s', $template));
+        $assetic->setup($template);
+        $environment->loadTemplate($template);
     }
 }
