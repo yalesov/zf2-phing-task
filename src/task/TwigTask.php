@@ -80,7 +80,9 @@ class TwigTask extends Task
         $template = "{$path['dirname']}/{$path['filename']}";
 
         $this->log(sprintf('Loading %s', $template));
+        /*
         $assetic->setup($template);
         $environment->loadTemplate($template);
+         */
     }
 }
