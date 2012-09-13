@@ -5,7 +5,7 @@ use Symfony\Component\Yaml\Yaml;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Application;
 
-class DoctrineEntityTask extends Task
+class TwigTask extends Task
 {
     protected $baseDir;
     protected $file;
