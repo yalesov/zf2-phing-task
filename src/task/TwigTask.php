@@ -19,6 +19,7 @@ class TwigTask extends Task
      */
     public function setBaseDir($baseDir)
     {
+        /*
         if (!is_dir($baseDir)) {
             throw new BuildException(sprintf(
                 'baseDir directory does not exist: %s',
@@ -31,6 +32,7 @@ class TwigTask extends Task
                 realpath($baseDir)
             ));
         }
+         */
         $this->baseDir = realpath($baseDir);
     }
 
