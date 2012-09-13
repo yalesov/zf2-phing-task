@@ -6,7 +6,7 @@ use Symfony\Component\Yaml\Yaml;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Application;
 
-class DoctrineUpdateTask extends Task
+class DoctrineDropTask extends Task
 {
     protected $failonerror;
 
