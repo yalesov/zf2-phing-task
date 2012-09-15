@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../../autoload.php';
 
+use Doctrine\ORM\Tools\Console\MetadataFilter;
 use Doctrine\ORM\Tools\DisconnectedClassMetadataFactory;
 use Doctrine\ORM\Tools\EntityGenerator;
 use Symfony\Component\Yaml\Yaml;
@@ -10,6 +11,8 @@ use Zend\Mvc\Application;
 class DoctrineEntityTask extends Task
 {
     protected $output;
+    protected $filter;
+    protected $em;
     protected $failonerror;
 
     /**
@@ -33,6 +36,31 @@ class DoctrineEntityTask extends Task
             ));
         }
         $this->output = realpath($output);
+    }
+
+    /**
+     * metadata filter
+     *
+     * @param string $filter
+     * @return void
+     */
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
+    }
+
+    /**
+     * the ServiceLocator identifier of the EntityManager
+     *
+     * can be either a FQCN, or an alias;
+     * must be registered with ZF2's ServiceManager
+     *
+     * @param string $em
+     * @return void
+     */
+    public function setEm($em)
+    {
+        $this->em = $em;
     }
 
     /**
@@ -80,7 +108,7 @@ class DoctrineEntityTask extends Task
             }
 
             $application = Application::init(Yaml::parse('config/application.config.yml'));
-            $em = $application->getServiceManager()->get('doctrine.entitymanager.orm_default');
+            $em = $application->getServiceManager()->get($this->em);
 
             chdir($wd);
 
@@ -90,6 +118,9 @@ class DoctrineEntityTask extends Task
         $cmf = new DisconnectedClassMetadataFactory();
         $cmf->setEntityManager($em);
         $metadatas = $cmf->getAllMetadata();
+        if (!empty($this->filter)) {
+            $metadatas = MetadataFilter::filter($metadatas, $this->filter);
+        }
 
         if (count($metadatas)) {
             // Create EntityGenerator

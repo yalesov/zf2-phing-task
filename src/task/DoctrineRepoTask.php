@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../../autoload.php';
 
+use Doctrine\ORM\Tools\Console\MetadataFilter;
 use Doctrine\ORM\Tools\EntityRepositoryGenerator;
 use Symfony\Component\Yaml\Yaml;
 use Zend\ServiceManager\ServiceManager;
@@ -9,6 +10,8 @@ use Zend\Mvc\Application;
 class DoctrineRepoTask extends Task
 {
     protected $output;
+    protected $filter;
+    protected $em;
     protected $failonerror;
 
     /**
@@ -32,6 +35,31 @@ class DoctrineRepoTask extends Task
             ));
         }
         $this->output = realpath($output);
+    }
+
+    /**
+     * metadata filter
+     *
+     * @param string $filter
+     * @return void
+     */
+    public function setFilter($filter)
+    {
+        $this->filter = $filter;
+    }
+
+    /**
+     * the ServiceLocator identifier of the EntityManager
+     *
+     * can be either a FQCN, or an alias;
+     * must be registered with ZF2's ServiceManager
+     *
+     * @param string $em
+     * @return void
+     */
+    public function setEm($em)
+    {
+        $this->em = $em;
     }
 
     /**
@@ -79,7 +107,7 @@ class DoctrineRepoTask extends Task
             }
 
             $application = Application::init(Yaml::parse('config/application.config.yml'));
-            $em = $application->getServiceManager()->get('doctrine.entitymanager.orm_default');
+            $em = $application->getServiceManager()->get($this->em);
 
             chdir($wd);
 
@@ -87,6 +115,9 @@ class DoctrineRepoTask extends Task
         }
 
         $metadatas = $em->getMetadataFactory()->getAllMetadata();
+        if (!empty($this->filter)) {
+            $metadatas = MetadataFilter::filter($metadatas, $this->filter);
+        }
 
         if (count($metadatas)) {
             $numRepositories = 0;

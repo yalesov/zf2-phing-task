@@ -1,6 +1,6 @@
 {
-    "name": "heartsentwined/phing-task",
-    "description": "phing tasks",
+    "name": "heartsentwined/zf2-phing-task",
+    "description": "A collection of Phing Tasks for a ZF2 app.",
     "license": "GPL-3.0",
     "authors": [
         {

@@ -8,7 +8,22 @@ use Zend\Mvc\Application;
 
 class DoctrineUpdateTask extends Task
 {
+    protected $em;
     protected $failonerror;
+
+    /**
+     * the ServiceLocator identifier of the EntityManager
+     *
+     * can be either a FQCN, or an alias;
+     * must be registered with ZF2's ServiceManager
+     *
+     * @param string $em
+     * @return void
+     */
+    public function setEm($em)
+    {
+        $this->em = $em;
+    }
 
     /**
      * if error occured, whether build should fail
@@ -55,7 +70,7 @@ class DoctrineUpdateTask extends Task
             }
 
             $application = Application::init(Yaml::parse('config/application.config.yml'));
-            $em = $application->getServiceManager()->get('doctrine.entitymanager.orm_default');
+            $em = $application->getServiceManager()->get($this->em);
 
             chdir($wd);
 
