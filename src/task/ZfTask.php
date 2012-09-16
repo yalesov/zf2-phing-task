@@ -62,17 +62,6 @@ class ZfTask extends Task
      */
     public function main()
     {
-        $wd = getcwd();
-
-        $application = require $this->bootstrap;
-        if (!$application instanceof Application) {
-            throw new BuildException(
-                'bootstrap file should return an instance of Zend\Mvc\Application'
-            );
-        }
-        $this->project->zf = $application;
-        //$this->project->setProperty('zf', $application);
-
-        chdir($wd);
+        $this->project->setProperty('zf', $this->bootstrap);
     }
 }

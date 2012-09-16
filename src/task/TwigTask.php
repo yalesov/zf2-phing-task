@@ -52,9 +52,18 @@ class TwigTask extends Task
         static $environment;
 
         if ($assetic === null || $environment === null) {
-            $sm = $this->projct->zf->getServiceManager();
-            //$sm = $this->project->getProperty('zf')
-            //    ->getServiceManager();
+            $wd = getcwd();
+            $zf = $this->project->getProperty('zf');
+            $application = require $zf;
+            if (!$application instanceof Application) {
+                throw new BuildException(sprintf(
+                    'zf bootstrap file "%s" should return an instance of Zend\Mvc\Application',
+                    $zf
+                ));
+            }
+            chdir($wd);
+
+            $sm = $application->getServiceManager();
             $assetic     = $sm->get('assetwig-assetic');
             $environment = $sm->get('assetwig-environment');
         }

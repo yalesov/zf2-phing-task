@@ -90,9 +90,18 @@ class DoctrineProxyTask extends Task
     {
         static $em;
         if ($em === null) {
-            $em = $this->project->zf
-            //$em = $this->project->getProperty('zf')
-                ->getServiceManager()->get($this->em);
+            $wd = getcwd();
+            $zf = $this->project->getProperty('zf');
+            $application = require $zf;
+            if (!$application instanceof Application) {
+                throw new BuildException(sprintf(
+                    'zf bootstrap file "%s" should return an instance of Zend\Mvc\Application',
+                    $zf
+                ));
+            }
+            chdir($wd);
+
+            $em = $application->getServiceManager()->get($this->em);
         }
 
         $metadatas = $em->getMetadataFactory()->getAllMetadata();
