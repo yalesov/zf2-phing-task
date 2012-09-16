@@ -13,10 +13,10 @@ class ZfTask extends Task
      *
      * the bootstrap file must return an instance of Zend\Mvc\Application
      *
-     * @param string $boostrap
+     * @param string $bootstrap
      * @return void
      */
-    public function setBootstrap($boostrap)
+    public function setBootstrap($bootstrap)
     {
         if (!is_file($bootstrap)) {
             throw new BuildException(sprintf(
