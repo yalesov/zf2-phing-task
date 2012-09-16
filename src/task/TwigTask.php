@@ -52,28 +52,10 @@ class TwigTask extends Task
         static $environment;
 
         if ($assetic === null || $environment === null) {
-            $wd = getcwd();
-
-            $previousDir = '.';
-            while (!file_exists('config/application.config.yml')) {
-                $dir = dirname(getcwd());
-
-                if ($previousDir === $dir) {
-                    throw new BuildException('Unable to locate "config/application.config.yml"');
-                }
-
-                $previousDir = $dir;
-                chdir($dir);
-            }
-
-            $application = Application::init(Yaml::parse('config/application.config.yml'));
-            $sm = $application->getServiceManager();
+            $sm = $this->project->getProperty('zf')
+                ->getServiceManager();
             $assetic     = $sm->get('assetwig-assetic');
             $environment = $sm->get('assetwig-environment');
-
-            chdir($wd);
-
-            /* finish bootstrapping zf2 */
         }
 
         $path = pathinfo($this->file);

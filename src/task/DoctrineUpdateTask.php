@@ -53,28 +53,9 @@ class DoctrineUpdateTask extends Task
     public function main()
     {
         static $em;
-
         if ($em === null) {
-            $wd = getcwd();
-
-            $previousDir = '.';
-            while (!file_exists('config/application.config.yml')) {
-                $dir = dirname(getcwd());
-
-                if ($previousDir === $dir) {
-                    throw new BuildException('Unable to locate "config/application.config.yml"');
-                }
-
-                $previousDir = $dir;
-                chdir($dir);
-            }
-
-            $application = Application::init(Yaml::parse('config/application.config.yml'));
-            $em = $application->getServiceManager()->get($this->em);
-
-            chdir($wd);
-
-            /* finish bootstrapping zf2 */
+            $em = $this->project->getProperty('zf')
+                ->getServiceManager()->get($this->em);
         }
 
         $metadatas = $em->getMetadataFactory()->getAllMetadata();
