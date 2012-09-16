@@ -39,18 +39,28 @@ $ pear install [--alldeps] phing/phing
 
 # Usage
 
-## ClassmapTask
+You must initialize an instance of your Zf2 application through **ZfTask** before using any of the remaining Tasks.
 
-Generate a classmap for the directory `foo/library` (and its subdirectories), save it at `foo/autoload_classmap.php`.
+## ZfTask
+
+Bootstrap the ZF2 application using the file `foo/bootstrap.php`. The bootstrap file must return an instance of `Zend\Mvc\Application`.
 
 ```xml
 <project>
     <target>
         <includepath classpath="vendor/heartsentwined/zf2-phing-task/src/task" />
-        <taskdef name="classmap" classname="ClassmapTask" />
-        <classmap dir="foo/library" output="foo/autoload_classmap.php" />
+        <taskdef name="zf" classname="ZfTask" />
+        <zf bootstrap="foo/bootstrap.php" />
     </target>
 </project>
+```
+
+`foo/bootstrap.php`:
+
+```php
+/* do some bootstrap */
+$application = Zend\Mvc\Application::init(/* config array */);
+return $application;
 ```
 
 ## DoctrineEntityTask
