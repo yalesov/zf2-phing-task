@@ -91,7 +91,8 @@ class DoctrineRepoTask extends Task
     {
         static $em;
         if ($em === null) {
-            $em = $this->project->getProperty('zf')
+            $em = $this->project->zf
+            //$em = $this->project->getProperty('zf')
                 ->getServiceManager()->get($this->em);
         }
 

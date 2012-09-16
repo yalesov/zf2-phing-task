@@ -70,7 +70,8 @@ class ZfTask extends Task
                 'bootstrap file should return an instance of Zend\Mvc\Application'
             );
         }
-        $this->project->setProperty('zf', $application);
+        $this->project->zf = $application;
+        //$this->project->setProperty('zf', $application);
 
         chdir($wd);
     }

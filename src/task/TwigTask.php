@@ -52,8 +52,9 @@ class TwigTask extends Task
         static $environment;
 
         if ($assetic === null || $environment === null) {
-            $sm = $this->project->getProperty('zf')
-                ->getServiceManager();
+            $sm = $this->projct->zf->getServiceManager();
+            //$sm = $this->project->getProperty('zf')
+            //    ->getServiceManager();
             $assetic     = $sm->get('assetwig-assetic');
             $environment = $sm->get('assetwig-environment');
         }
