@@ -62,6 +62,8 @@ class ZfTask extends Task
      */
     public function main()
     {
+        $wd = getcwd();
+
         $application = require $this->bootstrap;
         if (!$application instanceof Application) {
             throw new BuildException(
@@ -69,5 +71,7 @@ class ZfTask extends Task
             );
         }
         $this->project->setProperty('zf', $application);
+
+        chdir($wd);
     }
 }
