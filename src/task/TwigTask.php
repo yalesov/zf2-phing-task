@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../../../autoload.php';
 
-use Symfony\Component\Yaml\Yaml;
+use Heartsentwined\Yaml\Yaml;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Application;
 

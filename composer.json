@@ -16,7 +16,7 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/yaml": "2.0.*",
+        "heartsentwined/yaml": "1.*",
         "zendframework/zendframework": "2.*",
         "heartsentwined/zf2-doctrine": "1.*",
         "heartsentwined/zf2-assetwig": "1.*"
