@@ -3,7 +3,6 @@ require_once __DIR__ . '/../../../../autoload.php';
 
 use Doctrine\ORM\Tools\Console\MetadataFilter;
 use Doctrine\ORM\Tools\EntityRepositoryGenerator;
-use Heartsentwined\Yaml\Yaml;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Application;
 
@@ -17,7 +16,7 @@ class DoctrineRepoTask extends Task
     /**
      * output directory for entity classes
      *
-     * @param string $output
+     * @param  string $output
      * @return void
      */
     public function setOutput($output)
@@ -40,7 +39,7 @@ class DoctrineRepoTask extends Task
     /**
      * metadata filter
      *
-     * @param string $filter
+     * @param  string $filter
      * @return void
      */
     public function setFilter($filter)
@@ -54,7 +53,7 @@ class DoctrineRepoTask extends Task
      * can be either a FQCN, or an alias;
      * must be registered with ZF2's ServiceManager
      *
-     * @param string $em
+     * @param  string $em
      * @return void
      */
     public function setEm($em)
@@ -65,7 +64,7 @@ class DoctrineRepoTask extends Task
     /**
      * if error occured, whether build should fail
      *
-     * @param bool $value
+     * @param  bool $value
      * @return void
      */
     public function setFailonerror($value)

@@ -13,7 +13,7 @@ class ZfTask extends Task
      *
      * the bootstrap file must return an instance of Zend\Mvc\Application
      *
-     * @param string $bootstrap
+     * @param  string $bootstrap
      * @return void
      */
     public function setBootstrap($bootstrap)
@@ -36,7 +36,7 @@ class ZfTask extends Task
     /**
      * if error occured, whether build should fail
      *
-     * @param bool $value
+     * @param  bool $value
      * @return void
      */
     public function setFailonerror($value)

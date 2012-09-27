@@ -2,7 +2,6 @@
 require_once __DIR__ . '/../../../../autoload.php';
 
 use Doctrine\ORM\Tools\Console\MetadataFilter;
-use Heartsentwined\Yaml\Yaml;
 use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Application;
 
@@ -16,7 +15,7 @@ class DoctrineProxyTask extends Task
     /**
      * output directory for entity classes
      *
-     * @param string $output
+     * @param  string $output
      * @return void
      */
     public function setOutput($output)
@@ -39,7 +38,7 @@ class DoctrineProxyTask extends Task
     /**
      * metadata filter
      *
-     * @param string $filter
+     * @param  string $filter
      * @return void
      */
     public function setFilter($filter)
@@ -53,7 +52,7 @@ class DoctrineProxyTask extends Task
      * can be either a FQCN, or an alias;
      * must be registered with ZF2's ServiceManager
      *
-     * @param string $em
+     * @param  string $em
      * @return void
      */
     public function setEm($em)
@@ -64,7 +63,7 @@ class DoctrineProxyTask extends Task
     /**
      * if error occured, whether build should fail
      *
-     * @param bool $value
+     * @param  bool $value
      * @return void
      */
     public function setFailonerror($value)

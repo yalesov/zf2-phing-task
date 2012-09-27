@@ -1,8 +1,6 @@
 <?php
 require_once __DIR__ . '/../../../../autoload.php';
 
-use Heartsentwined\Yaml\Yaml;
-use Zend\ServiceManager\ServiceManager;
 use Zend\Mvc\Application;
 
 class TwigTask extends Task
@@ -13,7 +11,7 @@ class TwigTask extends Task
     /**
      * path to template file, relative to template base directory
      *
-     * @param string $file
+     * @param  string $file
      * @return void
      */
     public function setFile($file)
@@ -24,7 +22,7 @@ class TwigTask extends Task
     /**
      * if error occured, whether build should fail
      *
-     * @param bool $value
+     * @param  bool $value
      * @return void
      */
     public function setFailonerror($value)
