@@ -116,7 +116,7 @@ class DoctrineEntityTask extends Task
             // Create EntityGenerator
             $entityGenerator = new EntityGenerator();
 
-            $entityGenerator->setGenerateAnnotations(false);
+            $entityGenerator->setGenerateAnnotations(true);
             $entityGenerator->setGenerateStubMethods(true);
             $entityGenerator->setRegenerateEntityIfExists(true);
             $entityGenerator->setUpdateEntityIfExists(true);
