@@ -72,7 +72,7 @@ Generate entities for the EntityManager `doctrine.entitymanager.orm_default`, ba
     <target>
         <includepath classpath="vendor/heartsentwined/zf2-phing-task/src/task" />
         <taskdef name="d-entity" classname="DoctrineEntityTask" />
-        <d-proxy em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/src" />
+        <d-entity em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/src" />
     </target>
 </project>
 ```
