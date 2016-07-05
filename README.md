@@ -13,7 +13,7 @@ you'll have to change the code in each Task's `main()` method.
 ```json
 {
     "require": {
-        "yalesov/zf2-phing-task": "1.*"
+        "yalesov/zf2-phing-task": "2.*"
     }
 }
 ```

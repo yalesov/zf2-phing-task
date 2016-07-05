@@ -10,10 +10,10 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "yalesov/yaml": "1.*",
+        "yalesov/yaml": "2.*",
         "zendframework/zendframework": "2.*",
-        "yalesov/zf2-doctrine": "1.*",
-        "yalesov/zf2-assetwig": "2.*"
+        "yalesov/zf2-doctrine": "2.*",
+        "yalesov/zf2-assetwig": "3.*"
     },
     "autoload": {
         "classmap": ["src/task/"]
