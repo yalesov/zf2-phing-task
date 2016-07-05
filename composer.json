@@ -1,24 +1,32 @@
 {
-    "name": "heartsentwined/zf2-phing-task",
+    "name": "yalesov/zf2-phing-task",
     "description": "A collection of Phing Tasks for a ZF2 app.",
-    "license": "GPL-3.0",
     "keywords": ["phing"],
-    "homepage": "https://github.com/heartsentwined/phing-task",
     "authors": [
         {
-            "name": "heartsentwined",
-            "email": "heartsentwined@cogito-lab.com",
-            "role": "Developer"
+            "name": "Yulij Andreevich Lesov",
+            "email": "yalesov@gmail.com"
         }
     ],
+    "require": {
+        "php": ">=5.3.3",
+        "yalesov/yaml": "1.*",
+        "zendframework/zendframework": "2.*",
+        "yalesov/zf2-doctrine": "1.*",
+        "yalesov/zf2-assetwig": "2.*"
+    },
     "autoload": {
         "classmap": ["src/task/"]
     },
-    "require": {
-        "php": ">=5.3.3",
-        "heartsentwined/yaml": "1.*",
-        "zendframework/zendframework": "2.*",
-        "heartsentwined/zf2-doctrine": "1.*",
-        "heartsentwined/zf2-assetwig": "2.*"
+    "license": "ISC",
+    "homepage": "https://github.com/yalesov/zf2-phing-task",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/yalesov/zf2-phing-task"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/yalesov/zf2-phing-task/issues"
     }
 }

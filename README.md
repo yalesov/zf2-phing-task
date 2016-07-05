@@ -13,7 +13,7 @@ you'll have to change the code in each Task's `main()` method.
 ```json
 {
     "require": {
-        "heartsentwined/zf2-phing-task": "1.*"
+        "yalesov/zf2-phing-task": "1.*"
     }
 }
 ```
@@ -48,7 +48,7 @@ Bootstrap the ZF2 application using the file `foo/bootstrap.php`. The bootstrap 
 ```xml
 <project>
     <target>
-        <includepath classpath="vendor/heartsentwined/zf2-phing-task/src/task" />
+        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
         <taskdef name="zf" classname="ZfTask" />
         <zf bootstrap="foo/bootstrap.php" />
     </target>
@@ -70,7 +70,7 @@ Generate entities for the EntityManager `doctrine.entitymanager.orm_default`, ba
 ```xml
 <project>
     <target>
-        <includepath classpath="vendor/heartsentwined/zf2-phing-task/src/task" />
+        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
         <taskdef name="d-entity" classname="DoctrineEntityTask" />
         <d-entity em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/src" />
     </target>
@@ -84,7 +84,7 @@ Generate repositories for the EntityManager `doctrine.entitymanager.orm_default`
 ```xml
 <project>
     <target>
-        <includepath classpath="vendor/heartsentwined/zf2-phing-task/src/task" />
+        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
         <taskdef name="d-repo" classname="DoctrineRepoTask" />
         <d-repo em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/src" />
     </target>
@@ -98,7 +98,7 @@ Generate proxies for the EntityManager `doctrine.entitymanager.orm_default`, at 
 ```xml
 <project>
     <target>
-        <includepath classpath="vendor/heartsentwined/zf2-phing-task/src/task" />
+        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
         <taskdef name="d-proxy" classname="DoctrineProxyTask" />
         <d-proxy em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/cache/proxy" />
     </target>
@@ -112,7 +112,7 @@ Update database schema for the EntityManager `doctrine.entitymanager.orm_default
 ```xml
 <project>
     <target>
-        <includepath classpath="vendor/heartsentwined/zf2-phing-task/src/task" />
+        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
         <taskdef name="d-update" classname="DoctrineUpdateTask" />
         <d-update em="doctrine.entitymanager.orm_default" />
     </target>
@@ -128,7 +128,7 @@ Drop all database tables from the connection of the EntityManager `doctrine.enti
 ```xml
 <project>
     <target>
-        <includepath classpath="vendor/heartsentwined/zf2-phing-task/src/task" />
+        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
         <taskdef name="d-drop" classname="DoctrineDropTask" />
         <d-drop em="doctrine.entitymanager.orm_default" />
     </target>
@@ -142,7 +142,7 @@ Load the Twig template `foo/bar`.
 ```xml
 <project>
     <target>
-        <includepath classpath="vendor/heartsentwined/zf2-phing-task/src/task" />
+        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
         <taskdef name="twig" classname="TwigTask" />
         <twig file="foo/bar" />
     </target>
