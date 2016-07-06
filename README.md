@@ -12,9 +12,9 @@ you'll have to change the code in each Task's `main()` method.
 
 ```json
 {
-    "require": {
-        "yalesov/zf2-phing-task": "2.*"
-    }
+  "require": {
+    "yalesov/zf2-phing-task": "2.*"
+  }
 }
 ```
 
@@ -24,9 +24,9 @@ You can install it through Composer and use the CLI at `vendor/bin/phing`:
 
 ```json
 {
-    "require": {
-        "phing/phing": "*"
-    }
+  "require": {
+    "phing/phing": "*"
+  }
 }
 ```
 
@@ -47,11 +47,11 @@ Bootstrap the ZF2 application using the file `foo/bootstrap.php`. The bootstrap 
 
 ```xml
 <project>
-    <target>
-        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
-        <taskdef name="zf" classname="ZfTask" />
-        <zf bootstrap="foo/bootstrap.php" />
-    </target>
+  <target>
+    <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
+    <taskdef name="zf" classname="ZfTask" />
+    <zf bootstrap="foo/bootstrap.php" />
+  </target>
 </project>
 ```
 
@@ -69,11 +69,11 @@ Generate entities for the EntityManager `doctrine.entitymanager.orm_default`, ba
 
 ```xml
 <project>
-    <target>
-        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
-        <taskdef name="d-entity" classname="DoctrineEntityTask" />
-        <d-entity em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/src" />
-    </target>
+  <target>
+    <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
+    <taskdef name="d-entity" classname="DoctrineEntityTask" />
+    <d-entity em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/src" />
+  </target>
 </project>
 ```
 
@@ -83,11 +83,11 @@ Generate repositories for the EntityManager `doctrine.entitymanager.orm_default`
 
 ```xml
 <project>
-    <target>
-        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
-        <taskdef name="d-repo" classname="DoctrineRepoTask" />
-        <d-repo em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/src" />
-    </target>
+  <target>
+    <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
+    <taskdef name="d-repo" classname="DoctrineRepoTask" />
+    <d-repo em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/src" />
+  </target>
 </project>
 ```
 
@@ -97,11 +97,11 @@ Generate proxies for the EntityManager `doctrine.entitymanager.orm_default`, at 
 
 ```xml
 <project>
-    <target>
-        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
-        <taskdef name="d-proxy" classname="DoctrineProxyTask" />
-        <d-proxy em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/cache/proxy" />
-    </target>
+  <target>
+    <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
+    <taskdef name="d-proxy" classname="DoctrineProxyTask" />
+    <d-proxy em="doctrine.entitymanager.orm_default" filter="Foo\Entity" output="foo/cache/proxy" />
+  </target>
 </project>
 ```
 
@@ -111,11 +111,11 @@ Update database schema for the EntityManager `doctrine.entitymanager.orm_default
 
 ```xml
 <project>
-    <target>
-        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
-        <taskdef name="d-update" classname="DoctrineUpdateTask" />
-        <d-update em="doctrine.entitymanager.orm_default" />
-    </target>
+  <target>
+    <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
+    <taskdef name="d-update" classname="DoctrineUpdateTask" />
+    <d-update em="doctrine.entitymanager.orm_default" />
+  </target>
 </project>
 ```
 
@@ -127,11 +127,11 @@ Drop all database tables from the connection of the EntityManager `doctrine.enti
 
 ```xml
 <project>
-    <target>
-        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
-        <taskdef name="d-drop" classname="DoctrineDropTask" />
-        <d-drop em="doctrine.entitymanager.orm_default" />
-    </target>
+  <target>
+    <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
+    <taskdef name="d-drop" classname="DoctrineDropTask" />
+    <d-drop em="doctrine.entitymanager.orm_default" />
+  </target>
 </project>
 ```
 
@@ -141,10 +141,10 @@ Load the Twig template `foo/bar`.
 
 ```xml
 <project>
-    <target>
-        <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
-        <taskdef name="twig" classname="TwigTask" />
-        <twig file="foo/bar" />
-    </target>
+  <target>
+    <includepath classpath="vendor/yalesov/zf2-phing-task/src/task" />
+    <taskdef name="twig" classname="TwigTask" />
+    <twig file="foo/bar" />
+  </target>
 </project>
 ```
