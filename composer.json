@@ -1,32 +1,32 @@
 {
-    "name": "yalesov/zf2-phing-task",
-    "description": "A collection of Phing Tasks for a ZF2 app.",
-    "keywords": ["phing"],
-    "authors": [
-        {
-            "name": "Yulij Andreevich Lesov",
-            "email": "yalesov@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.3.3",
-        "yalesov/yaml": "2.*",
-        "zendframework/zendframework": "2.*",
-        "yalesov/zf2-doctrine": "2.*",
-        "yalesov/zf2-assetwig": "3.*"
-    },
-    "autoload": {
-        "classmap": ["src/task/"]
-    },
-    "license": "ISC",
-    "homepage": "https://github.com/yalesov/zf2-phing-task",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/yalesov/zf2-phing-task"
-        }
-    ],
-    "support": {
-        "issues": "https://github.com/yalesov/zf2-phing-task/issues"
+  "name": "yalesov/zf2-phing-task",
+  "description": "A collection of Phing Tasks for a ZF2 app.",
+  "keywords": ["phing"],
+  "authors": [
+    {
+      "name": "Yulij Andreevich Lesov",
+      "email": "yalesov@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=5.3.3",
+    "yalesov/yaml": "2.*",
+    "zendframework/zendframework": "2.*",
+    "yalesov/zf2-doctrine": "2.*",
+    "yalesov/zf2-assetwig": "3.*"
+  },
+  "autoload": {
+    "classmap": ["src/task/"]
+  },
+  "license": "ISC",
+  "homepage": "https://github.com/yalesov/zf2-phing-task",
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/yalesov/zf2-phing-task"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/yalesov/zf2-phing-task/issues"
+  }
 }
